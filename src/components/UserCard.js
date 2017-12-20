@@ -1,15 +1,14 @@
 import React from "react";
 
 // Custom card component for each user's data
-const UserCard = ({ user, onDelete }) => {
+const UserCard = ({ user, onDelete, onEditForm }) => {
   const { first_name, last_name, avatar } = user;
 
   // Set the CSS max-width attribute directly in the
   // element. `style` accepts a JS object and the
   // attributes use camelcase. See docs for more info.
   // Also using new card class for Bootstrap 4.
-  console.log("========HERE I AM=========");
-  console.log(user.id);
+
   return (
     <div className="UserCard card" style={{ maxWidth: "128px" }}>
       <img className="card-img-top img-fluid" src={avatar} alt="user avatar" />
@@ -19,11 +18,14 @@ const UserCard = ({ user, onDelete }) => {
         </h4>
       </div>
       <div className="card-block">
-        <a>
-          <h4 onClick={onDelete} id={user.id}>
+          <button onClick={onDelete} id={user.id}>
             Delete User
-          </h4>
-        </a>
+          </button>
+      </div>
+      <div className="card-block">
+          <button onClick={onEditForm} id={`edit${user.id}`}>
+            Edit User
+          </button>
       </div>
     </div>
   );

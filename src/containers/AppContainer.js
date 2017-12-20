@@ -34,7 +34,7 @@ class AppContainer extends Component {
   }
 
   onDeleteUser = e => {
-    //e.preventDefault();
+    e.preventDefault();
     const id = e.target.id;
     const url = `https://reqres.in/api/users/${id}`;
 
@@ -50,24 +50,12 @@ class AppContainer extends Component {
         if (!response.ok) {
           throw new Error(`${response.status} ${response.statusText}`);
         }
-        const newUsers = this.state.users.filter(user => user.id !== id);
+        const newUsers = this.state.users.filter(user => user.id != id);
         this.setState({
           users: newUsers,
           isFetching: false
         });
-        console.log(response);
-        // return response;
       })
-      // .then(json => {
-      //   fetch("https://reqres.in/api/users?delay=1")
-      //     .then(response => response.json())
-      //     .then(json => {
-      //       this.setState({
-      //         users: json.data,
-      //         isFetching: false
-      //       });
-      //     });
-      // })
       .catch(error => {
         // Set error in state & log to console
         console.log(error);
@@ -130,12 +118,84 @@ class AppContainer extends Component {
       });
   };
 
+
+  onEditForm = e => {
+    let id  = e.target.id;
+    id = id.substring(4);
+    console.log("ID is "+id);
+    let user = this.state.users.find(user=>{
+      return user.id == id
+    });
+
+    let editingUser = Object.assign(user);
+    console.log("editingUser");
+    console.log(editingUser);
+    this.setState({editingUser:editingUser});
+  };
+
+
+  onEditUser = e => {
+    e.preventDefault();
+    const form = e.target;
+    const body = serialize(form, { hash: true });
+
+    // Create headers to set the content type to json
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    // Set options, and stringify the body to JSON
+    const options = {
+      headers,
+      method: "POST",
+      body: JSON.stringify(body)
+    };
+
+    // Before performing the fetch, set isFetching to true
+    this.setState({ isFetching: true });
+
+    fetch("https://reqres.in/api/users", options)
+      .then(response => {
+        // If response not okay, throw an error
+        if (!response.ok) {
+          throw new Error(`${response.status} ${response.statusText}`);
+        }
+
+        // Otherwise, extract the response into json
+        return response.json();
+      })
+      .then(json => {
+        // Update the user list and isFetching.
+        // Reset the form in a callback after state is set.
+        this.setState(
+          {
+            isFetching: false,
+            users: [...this.state.users, json]
+          },
+          () => {
+            form.reset();
+          }
+        );
+      })
+      .catch(error => {
+        // Set error in state & log to console
+        console.log(error);
+        this.setState({
+          isFetching: false,
+          error
+        });
+      });
+  };
+
+
+
   render() {
     return (
       <App
         onAddUser={this.onAddUser}
         onDeleteUser={this.onDeleteUser}
+        onEditForm={this.onEditForm}
         {...this.state}
+
       />
     );
   }
