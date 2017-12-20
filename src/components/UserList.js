@@ -1,11 +1,11 @@
-import React from 'react'
-import UserCard from './UserCard'
+import React from "react";
+import UserCard from "./UserCard";
 
-const UserList = ({users, isFetching, onDelete}) => {
+const UserList = ({ users, isFetching, onDelete }) => {
   // Generate the UserCard for each user
-  const userList = users.map((user) =>
-    <UserCard user={user} key={user.id} onDelete={onDelete} userId={user.Id}/>
-  )
+  const userList = users.map(user => (
+    <UserCard user={user} key={user.id} onDelete={onDelete} />
+  ));
 
   // card-group is the layout wrapper for Bootstrap
   // 4 cards. Add ternary operator to conditionally
@@ -17,7 +17,7 @@ const UserList = ({users, isFetching, onDelete}) => {
         {isFetching ? <p>Loading...</p> : userList}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default UserList
+export default UserList;
